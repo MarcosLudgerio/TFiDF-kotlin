@@ -8,6 +8,8 @@ fun main() {
     val shapes: MutableList<String> = mutableListOf("triangle", "25", "circle", "false")
     val readOnlyFruit = setOf("apple", "apple", "Banana", "cherry")
     val priceAndFruit = mapOf("apple" to 100, "kiwi" to 190, "orange" to 100)
+    val document: HashMap<Integer, String> = HashMap()
+
     println("${name} is ${age} years old")
     println(readOnlyFruit.size)
     println(readOnlyFruit.count())
