@@ -1,37 +1,42 @@
 package utils
 
+import java.io.IOException
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.concurrent.atomic.AtomicLong
+import java.util.logging.Logger
+
 
 class FileProperties {
     private var countDoc: Int = 0
     private val counter: AtomicLong = AtomicLong()
-    private val document: Map<Integer, String> = HashMap()
+    val LOGGER: Logger = Logger.getLogger("DocumentReader")
 
+    @Throws(IOException::class)
     fun readDocument(filepath: String): Map<Int, String> {
-        val document: HashMap<Int, String> = HashMap()
-        val reader = Files.newBufferedReader(Paths.get(filepath))
-        var lines: List<String> = reader.readLines()
-        for (line in lines) {
-            if (line.isEmpty()) break
-            countDoc++
-            document.put(countDoc, line)
+        LOGGER.info("Reading documents from $filepath")
+        val document = mutableMapOf<Int, String>()
+        Files.newBufferedReader(Path.of(filepath)).use { reader ->
+            reader.lineSequence().forEach { line ->
+                countDoc++
+                if (line.isNotEmpty()) {
+                    document[countDoc] = line
+                }
+            }
         }
-        reader.close()
+        LOGGER.info("Reading finished")
         return document
     }
 
+    @Throws(IOException::class)
     fun readDocumentAtomic(filepath: String): Map<AtomicLong, String>{
-        val document: HashMap<AtomicLong, String> = HashMap()
-        val reader = Files.newBufferedReader(Paths.get(filepath))
-        var lines: List<String> = reader.readLines()
-        for (line in lines) {
-            if (line.isEmpty()) break
-            document.put(AtomicLong(counter.incrementAndGet()), line)
+        return Files.newBufferedReader(Paths.get(filepath)).use { reader ->
+            reader.lineSequence()
+                .takeWhile { it.isNotEmpty() }
+                .mapIndexed { index, line -> AtomicLong(counter.incrementAndGet()) to line }
+                .toMap()
         }
-        reader.close()
-        return document
     }
 
 }
