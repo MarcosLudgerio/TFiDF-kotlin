@@ -10,10 +10,12 @@ fun main(args:Array<String>){
     val fileProperties: FileProperties = FileProperties()
     val documents:Map<Int, String> = fileProperties.readDocument(filepath)
     val objTf: TFiDF = TFiDF()
-    val countTerm: MutableList<HashMap<String, AtomicLong>> = objTf.calculateTermFrequencyAtomic(documents.values.stream().toList())
-    val objIdf: HashMap<String, Double> = objTf.calculateIDFAtomic(countTerm, countTerm.size)
-
-    for (document in objIdf) {
-        println("${document.key}: ${document.value}")
+    val countTerm: List<Map<String, Int>> = objTf.calculateTermFrequency(documents.values.stream().toList())
+    val objIdf: Map<String, Double> = objTf.calculateIDF(countTerm, documents.size)
+    val objTfIdfCalculate: List<Map<String, Double>> = objTf.calculateTFIDF(countTerm, objIdf)
+    for (document in objTfIdfCalculate) {
+        for ((key, value ) in document) {
+            println("$key: $value")
+        }
     }
 }
