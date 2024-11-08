@@ -24,7 +24,6 @@ class FileProperties {
                     document[countDoc] = line
                 }
             }
-            println(document)
         }
 
         LOGGER.info("Reading finished")

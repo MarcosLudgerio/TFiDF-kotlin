@@ -4,7 +4,7 @@ import utils.FileProperties
 import utils.TFiDF
 
 fun main() {
-    val filepath: String = "D:\\repositorios-git\\TFiDF-kotlin\\TFiDF vk\\dataset\\dataset_100mb.txt"
+    val filepath: String = "D:\\repositorios-git\\TFiDF-kotlin\\TFiDF vk\\dataset\\dataset_test.txt"
     val file: FileProperties = FileProperties()
     val objTf: TFiDF = TFiDF()
     val lines = file.readDocumentAtomic(filepath)
