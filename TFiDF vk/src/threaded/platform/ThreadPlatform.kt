@@ -4,6 +4,7 @@ import utils.TFiDF
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
+import java.util.logging.Logger
 
 class ThreadPlatform(document: Map<AtomicLong, String>): Runnable {
     private val lock = ReentrantLock()
@@ -12,6 +13,7 @@ class ThreadPlatform(document: Map<AtomicLong, String>): Runnable {
     private val idfResult = AtomicReference<Map<String, Double>>(mutableMapOf())
     private var resultado = mutableListOf<Map<String, Double>>()
     private val objTf: TFiDF = TFiDF()
+    private val LOGGER: Logger = Logger.getLogger("DocumentReader")
 
     init {
         documents = document.values.toList() as MutableList<String>
@@ -44,20 +46,21 @@ class ThreadPlatform(document: Map<AtomicLong, String>): Runnable {
     fun calculateDFAndIDF() {
         lock.lock()
         try {
-            println("Calculando document frequency")
+            LOGGER.info("Calculando document frequency")
             val documentFrequency = calculateTermFrequency()
-            println("Calculando doubleMap")
+            LOGGER.info("Calculando doubleMap")
             val doubleMap:Map<String, Double>  = calculateDF(documentFrequency.size)
-            println("Calculando resultado")
+            LOGGER.info("Calculando resultado")
             // termFrequencyList: List<Map<String, AtomicLong>>, numDocuments: Int
             resultado = objTf.calculateTFIDFAtomic(documentFrequency, doubleMap) as MutableList<Map<String, Double>>
-            println(resultado.size)
         } finally {
             lock.unlock()
         }
     }
 
     override fun run() {
+        LOGGER.info("Started Platform Thread")
         calculateDFAndIDF()
+        LOGGER.info("Finished Thread")
     }
 }

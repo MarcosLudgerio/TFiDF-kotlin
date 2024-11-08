@@ -5,31 +5,28 @@ import java.io.IOException
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
 import java.util.concurrent.locks.ReentrantLock
+import java.util.logging.Level
+import java.util.logging.Logger
 
-class ThreadVirtual(filepath: String) : Runnable {
+class ThreadVirtual(private var filepath: String) : Runnable {
     private val lock = ReentrantLock()
-    private var filepath: String
     private val document = AtomicReference<Map<AtomicLong, String>>(mutableMapOf())
     private val objFileProperties: FileProperties = FileProperties()
-
-    init {
-        this.filepath = filepath
-    }
-
+    private val LOGGER: Logger = Logger.getLogger("DocumentReader")
     fun getDocument(): AtomicReference<Map<AtomicLong, String>> {
         return document
     }
 
     override fun run() {
-        println("Tentando ler arquivo")
+        LOGGER.info("Started Virtual Thread")
         try {
             lock.lock()
             document.set(objFileProperties.readDocumentAtomic(filepath))
         } catch (e: IOException) {
-            println("Erro ao ler documento: ${e.message}")
+            LOGGER.log(LOGGER.level, "Erro ao ler documento: ${e.message}")
         } finally {
             lock.unlock()
         }
-        println("Thread Virtual para leitura de arquivo fechada")
+        LOGGER.info("Thread Virtual para leitura de arquivo fechada")
     }
 }
