@@ -1,7 +1,5 @@
 package atomic
 
-import threaded.platform.ThreadPlatform
-import threaded.virtual.ThreadVirtual
 import utils.FileProperties
 import utils.TFiDF
 
