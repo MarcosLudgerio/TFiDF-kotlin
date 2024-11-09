@@ -14,27 +14,21 @@ class TermFrequencyTask(
     }
 
     val objTFiDF: TFiDF = TFiDF()
+
     override fun compute(): List<Map<String, Int>> {
-        val mid = documents.size / 2
         return if (end - start <= THRESHOLD) {
-            objTFiDF.calculateTermFrequency(documents.toList())
+            return objTFiDF.calculateTermFrequency(documents.toList().subList(start, end))
         } else {
-            val leftHalf = documents.copyOfRange(start, mid)
-            val rightHalf = documents.copyOfRange(mid + 1, end)
-            return getAllResult(leftHalf, mid, rightHalf)
+            val middle = (start + end) / 2
+            val leftTask = TermFrequencyTask(documents, start, middle)
+            val rightTask = TermFrequencyTask(documents, middle, end)
+
+            leftTask.fork() // Inicia a tarefa à esquerda em paralelo
+            val rightResult = rightTask.compute() // Calcula o lado direito
+            val leftResult = leftTask.join() // Aguarda a conclusão do lado esquerdo
+
+            return leftResult + rightResult
         }
     }
 
-    private fun getAllResult(leftHalf: Array<String>, mid: Int, rightHalf: Array<String>): List<Map<String, Int>> {
-        val taskLeft = TermFrequencyTask(leftHalf, start, mid)
-        val taskRight = TermFrequencyTask(rightHalf, mid + 1, documents.size - 1)
-
-        taskLeft.fork()
-        taskRight.fork()
-
-        val leftResult = taskLeft.join()
-        val rightResult = taskRight.join()
-
-        return leftResult + rightResult
-    }
 }

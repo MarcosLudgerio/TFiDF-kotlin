@@ -1,7 +1,6 @@
 package forkandjoin
 
 import utils.FileProperties
-import utils.TFiDF
 import java.io.IOException
 import java.util.concurrent.ForkJoinPool
 import java.util.logging.Logger
