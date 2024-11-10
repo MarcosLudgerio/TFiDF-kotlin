@@ -6,7 +6,7 @@ import java.util.concurrent.ForkJoinPool
 import java.util.logging.Logger
 
 object TestForkAndJoin {
-    private const val filePath = "D:\\repositorios-git\\TFiDF-kotlin\\TFiDF vk\\dataset\\dataset_1mb.txt"
+    private const val filePath = "D:\\repositorios-git\\TFiDF-kotlin\\TFiDF vk\\dataset\\dataset_10mb.txt"
     private val LOGGER: Logger = Logger.getLogger(TermFrequencyTask::class.java.name)
 
     val objFileProperties: FileProperties = FileProperties()

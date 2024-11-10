@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong
 import kotlin.collections.iterator
 
 fun main(args:Array<String>){
-    val filepath:String = "D:\\repositorios-git\\TFiDF-kotlin\\TFiDF vk\\dataset\\dataset_100mb.txt"
+    val filepath:String = "D:\\repositorios-git\\TFiDF-kotlin\\TFiDF vk\\dataset\\dataset_10mb.txt"
     val fileProperties: FileProperties = FileProperties()
     val documents:Map<AtomicLong, String> = fileProperties.readDocumentAtomic(filepath)
     val objTf: TFiDF = TFiDF()
